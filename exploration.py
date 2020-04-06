@@ -15,7 +15,7 @@ spark = SparkSession.builder.appName('BikeShare').getOrCreate()
 stationsLondonDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('data/Stations/Santander_London_Stations.csv')
+                             .load('/user/sgmpinol/data/Stations/Santander_London_Stations.csv')
 # Change column names							 
 newcolnames = ['DockingStationID','DockingStationName','StreetName','VillageLocality','Latitude','Longitude','NumberDockingPoints','InstallationDate','RemovalDate','CurrentStatus']
 stationsLondonDF = stationsLondonDF.toDF(*newcolnames)
@@ -24,7 +24,7 @@ stationsLondonDF = stationsLondonDF.toDF(*newcolnames)
 terminalsWashingtonDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('data/Stations/Capital_Washington_Stations.csv')
+                             .load('/user/sgmpinol/data/Stations/Capital_Washington_Stations.csv')
 # Change column names							 
 newcolnames = ['Adress','TerminalNumber','Latitude','Longitude','NumberDockingPoints']
 terminalsWashingtonDF = terminalsWashingtonDF.toDF(*newcolnames)
@@ -33,20 +33,20 @@ terminalsWashingtonDF = terminalsWashingtonDF.toDF(*newcolnames)
 datesDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('data/Calendar/dates.csv')
+                             .load('/user/sgmpinol/data/Calendar/dates.csv')
 
 
 # Read in dataset "festivity_london.csv"
 holidaysLondonDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('data/Calendar/festivity_london.csv')
+                             .load('/user/sgmpinol/data/Calendar/festivity_london.csv')
 
 # Read in dataset "holidays_washington.csv"
 holidaysWashingtonDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('data/Calendar/holidays_washington.csv')
+                             .load('/user/sgmpinol/data/Calendar/holidays_washington.csv')
 
 ########## INITIAL EXPLORATION ##########
 
