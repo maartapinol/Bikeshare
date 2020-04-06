@@ -17,7 +17,7 @@ spark = SparkSession.builder.appName('BikeShare').getOrCreate()
 tripsWashingtonDF = spark.read.format("csv").options(delimiter = ',')\
                              .options(header=True)\
                              .options(inferSchema=True)\
-                             .load('/user/sgmpinoldata/TripsWashington/*.csv')
+                             .load('/user/sgmpinol/data/TripsWashington/*.csv')
 # Change column names							 
 newcolnames = ['Duration','StartDate','EndDate','StartStationNumber','StartStation','EndStationNumber','EndStation','BikeNumber','Membertype']
 tripsWashingtonDF = tripsWashingtonDF.toDF(*newcolnames)
