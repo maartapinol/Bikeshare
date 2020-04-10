@@ -7,6 +7,8 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import unix_timestamp
 from pyspark.sql.functions import from_unixtime
 from datetime import datetime
+from pyspark.sql.functions import monotonically_increasing_id
+
 
 # Initialise Spark session !!!!!!!!!!!!!!WE NEED TO KNOW HOW TO RUN IT IN DISTRIBUTED WAY
 sc = SparkContext("local", "BikeShare")
@@ -39,9 +41,17 @@ print('\n\nWASHINGTON TRIPS\n')
 tripsWashingtonDF.show()
 tripsWashingtonDF.describe().show()
 
+# add column with identification number
+tripsWashingtonDF = tripsWashingtonDF.withColumn("TripID", monotonically_increasing_id())
+
+# N E W WASHINGTON
+print('\n\n N E W  WASHINGTON TRIPS\n')
+tripsWashingtonDF.show()
+tripsWashingtonDF.describe().show()
+
 # Null values x column
 print('\n\n*) Null values x column\n')	
-tripsWashingtonDF.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in tripsWashingtonDF.columns]).show()
+tripsWashingtonDF.select([count(when(col(c).isNull(), c)).alias(c) for c in tripsWashingtonDF.columns]).show()
 
 # Descriptive statistics
 print('\n\n*) Descriptive statistics\n')	
@@ -60,7 +70,7 @@ journeysLondonDF.describe().show()
 
 # Null values x column
 print('\n\n*) Null values x column\n')	
-journeysLondonDF.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c) for c in journeysLondonDF.columns]).show()
+journeysLondonDF.select([count(when(col(c).isNull(), c)).alias(c) for c in journeysLondonDF.columns]).show()
 
 # Descriptive statistics
 print('\n\n*) Descriptive statistics\n')	
