@@ -26,7 +26,7 @@ terminalsWashingtonDF = spark.read.format("csv").options(delimiter = ';')\
                              .options(inferSchema=True)\
                              .load('/user/sgmpinol/data/Stations/Capital_Washington_Stations.csv')
 # Change column names							 
-newcolnames = ['Adress','TerminalNumber','Latitude','Longitude','NumberDockingPoints']
+newcolnames = ['Address','TerminalNumber','Latitude','Longitude','NumberDockingPoints']
 terminalsWashingtonDF = terminalsWashingtonDF.toDF(*newcolnames)
 
 # Read in dataset "dates.csv"
@@ -116,7 +116,7 @@ terminalsWashingtonDF.select([count(when(isnan(c) | col(c).isNull(), c)).alias(c
 print('\n\n*) Descriptive statistics\n')
 print('\n\nSummary statistics of dataframe:\n')	
 terminalsWashingtonDF.describe().show()
-terminalsWashingtonDF.select(countDistinct("Adress")).show()
+terminalsWashingtonDF.select(countDistinct("Address")).show()
 terminalsWashingtonDF.select(countDistinct("TerminalNumber"),min("TerminalNumber"),max("TerminalNumber")).show()
 
 ## DATES ##	
@@ -219,4 +219,25 @@ holidaysWashingtonDF.printSchema()
 # Descriptive statistics
 print('\n\n*) Descriptive statistics\n')	
 holidaysWashingtonDF.select(count("Date"),min("Date"),max("Date")).show()
-holidaysWashingtonDF.groupBy('Festivity').count().show()
+holidaysWashingtonDF.groupBy('Festivity').count().show(truncate=False)
+
+
+#delete space after New Year's Day
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "New Year's Day ", "New Year's Day"))
+
+#Correct Martin Luther King Jr
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Martin Luther King Jr. Birthday", "Martin Luther King"))
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Martin Luther King Jr. Day", "Martin Luther King"))
+
+#Correct Washington's Birthday
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Washington's Birthday ", "Birthday of Washington"))
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Washington's Birthday", "Birthday of Washington(Presidents' Day)"))
+
+#Correct Indigenous - Colombus Day
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Indigenous Peoples' Day", "Columbus Day"))
+holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_replace('Festivity', "Columbus Day", "Columbus Day/ Indigenous Peoples' Day"))
+
+
+#  N E W  Festivity / Count table
+print('\n\n*) NEW Festivity - Count table\n')
+holidaysWashingtonDF.groupBy('Festivity').count().show(truncate=False)
