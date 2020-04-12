@@ -59,9 +59,7 @@ stationsLondonDF.show(n = 5)
 
 #replace "NULL" with Null
 print('\n\n replace "NULL" strings with Null (None)  value\n')
-from pyspark.sql.functions import col    
-stationsLondonDF =  stationsLondonDF.withColumn(
-    "VillageLocality",
+stationsLondonDF =  stationsLondonDF.withColumn("VillageLocality",
     when(
         col("VillageLocality").isin('NULL'),
         None
