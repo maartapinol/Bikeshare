@@ -58,13 +58,19 @@ print('\n\n Dataset: \n')
 stationsLondonDF.show(n = 5)
 
 #replace "NULL" with Null
-print('\n\n replace "NULL" strings with Null (None)  value\n')
+#print('\n\n replace "NULL" strings with Null (None)  value\n')
 stationsLondonDF =  stationsLondonDF.withColumn("VillageLocality",
     when(
         col("VillageLocality").isin('NULL'),
         None
     ).otherwise(col("VillageLocality"))
 )
+
+# if station has been removed then is not available
+#print('\n\n if removal date != null then Installed:Anavailable \n')
+stationsLondonDF = stationsLondonDF.withColumn("CurrentStatus", \
+              when(stationsLondonDF["RemovalDate"] != "-", "Installed:Anavailable").otherwise(stationsLondonDF["CurrentStatus"]))
+
 
 stationsLondonDF.cache()
 print('stationsLondonDF Count rows:',stationsLondonDF.count())
