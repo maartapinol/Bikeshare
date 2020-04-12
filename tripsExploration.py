@@ -49,6 +49,13 @@ print('\n\n N E W  WASHINGTON TRIPS\n')
 tripsWashingtonDF.show()
 tripsWashingtonDF.describe().show()
 
+
+# Most Popular stations and how many times has been found
+print('\n\n*) Most Popular Stations in Washington:\n')
+tripsWashingtonDF.groupBy('StartStation').count().orderBy('count', ascending=False).show(truncate=False)
+tripsWashingtonDF.groupBy('EndStation').count().orderBy('count', ascending=False).show(truncate=False)
+
+
 # Null values x column
 print('\n\n*) Null values x column\n')	
 tripsWashingtonDF.select([count(when(col(c).isNull(), c)).alias(c) for c in tripsWashingtonDF.columns]).show()
@@ -67,6 +74,13 @@ tripsWashingtonDF.groupBy('Membertype').count().show()
 print('\n\nLONDON JOURNEYS\n')	
 journeysLondonDF.show()
 journeysLondonDF.describe().show()
+
+
+# Most Popular stations and how many times has been found
+print('\n\n*) Most Popular Stations in London:\n')      
+journeysLondonDF.groupBy('StartStationName').count().orderBy('count', ascending=False).show(truncate=False)
+journeysLondonDF.groupBy('EndStationName').count().orderBy('count', ascending=False).show(truncate=False)
+
 
 # Null values x column
 print('\n\n*) Null values x column\n')	
