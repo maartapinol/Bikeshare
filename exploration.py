@@ -5,6 +5,7 @@ from pyspark.sql.types import *
 from pyspark.sql.functions import unix_timestamp
 from pyspark.sql.functions import from_unixtime
 from datetime import datetime
+from pyspark.sql.functions import *
 
 # Initialise Spark session !!!!!!!!!!!!!!WE NEED TO KNOW HOW TO RUN IT IN DISTRIBUTED WAY
 sc = SparkContext("local", "BikeShare")
