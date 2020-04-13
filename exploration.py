@@ -1,11 +1,9 @@
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import isnan, when, count, col, countDistinct, min, max, mean, udf
-from pyspark.sql.types import *
-from pyspark.sql.functions import unix_timestamp
-from pyspark.sql.functions import from_unixtime
-from datetime import datetime
 from pyspark.sql.functions import *
+from pyspark.sql.types import *
+from datetime import datetime
+
 
 # Initialise Spark session !!!!!!!!!!!!!!WE NEED TO KNOW HOW TO RUN IT IN DISTRIBUTED WAY
 sc = SparkContext("local", "BikeShare")
