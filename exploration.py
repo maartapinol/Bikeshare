@@ -255,3 +255,7 @@ holidaysWashingtonDF = holidaysWashingtonDF.withColumn('Festivity', regexp_repla
 #  N E W  Festivity / Count table
 print('\n\n*) NEW Festivity - Count table\n')
 holidaysWashingtonDF.groupBy('Festivity').count().show(truncate=False)
+
+
+# Close Spark session
+sc.stop()
