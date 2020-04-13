@@ -1,11 +1,7 @@
-# READ IN DATASETS
-
 from pyspark import SparkContext
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import isnan, when, count, col, countDistinct, min, max, mean, udf
+from pyspark.sql.functions import *
 from pyspark.sql.types import *
-from pyspark.sql.functions import unix_timestamp
-from pyspark.sql.functions import from_unixtime
 from datetime import datetime
 from pyspark.sql.functions import monotonically_increasing_id
 
@@ -37,9 +33,15 @@ journeysLondonDF = journeysLondonDF.toDF(*newcolnames)
 							 
 ## TRIPS WASHINGTON ##	
 
-print('\n\nWASHINGTON TRIPS\n')						 
-tripsWashingtonDF.show()
+print('\n\n --------- WASHINGTON TRIPS --------- \n')						 
+tripsWashingtonDF.show(n = 5)
 tripsWashingtonDF.describe().show()
+
+tripsWashingtonDF.cache()
+print('tripsWashingtonDF Count rows:', tripsWashingtonDF.count())
+
+print('\n\n*) Dataframe Schema:\n')
+tripsWashingtonDF.printSchema()
 
 # add column with identification number
 tripsWashingtonDF = tripsWashingtonDF.withColumn("TripID", monotonically_increasing_id())
@@ -61,7 +63,9 @@ print('\n\n*) Null values x column\n')
 tripsWashingtonDF.select([count(when(col(c).isNull(), c)).alias(c) for c in tripsWashingtonDF.columns]).show()
 
 # Descriptive statistics
-print('\n\n*) Descriptive statistics\n')	
+print('\n\n*) Descriptive statistics\n')
+tripsWashingtonDF.select(min('StartDate'),max('StartDate')).show()
+tripsWashingtonDF.select(min('EndDate'),max('EndDate')).show()	
 tripsWashingtonDF.select(countDistinct("StartStationNumber")).show()
 tripsWashingtonDF.select(countDistinct("StartStation")).show()
 tripsWashingtonDF.select(countDistinct("EndStationNumber")).show()
@@ -72,9 +76,23 @@ tripsWashingtonDF.groupBy('Membertype').count().show()
 ## JOURNEYS LONDON ##
 
 print('\n\nLONDON JOURNEYS\n')	
-journeysLondonDF.show()
+journeysLondonDF.show(n = 5)
 journeysLondonDF.describe().show()
 
+journeysLondonDF.cache()
+print('journeysLondonDF Count rows:', journeysLondonDF.count())
+
+print('\n\n*) Dataframe Schema:\n')
+journeysLondonDF.printSchema()
+
+## we need to transform StartDate and EndDate from string to timestamp
+journeysLondonDF = journeysLondonDF.withColumn('StartDate', from_unixtime(unix_timestamp('StartDate', 'dd/mm/yyyy HH:mm:ss')).alias('StartDate'))
+journeysLondonDF = journeysLondonDF.withColumn('EndDate', from_unixtime(unix_timestamp('EndDate', 'dd/mm/yyyy HH:mm:ss')).alias('EndDate'))
+journeysLondonDF = journeysLondonDF.withColumn("StartDate", journeysLondonDF["StartDate"].cast(DateType())).withColumn("EndDate", journeysLondonDF["EndDate"].cast(DateType()))
+
+print('\n\nAfter adjusting schema:\n')
+print('\n\n*)Dataframe New Schema:\n')
+journeysLondonDF.printSchema()
 
 # Most Popular stations and how many times has been found
 print('\n\n*) Most Popular Stations in London:\n')      
@@ -87,8 +105,9 @@ print('\n\n*) Null values x column\n')
 journeysLondonDF.select([count(when(col(c).isNull(), c)).alias(c) for c in journeysLondonDF.columns]).show()
 
 # Descriptive statistics
-print('\n\n*) Descriptive statistics\n')	
-journeysLondonDF.select(countDistinct("RentalId")).show()
+print('\n\n*) Descriptive statistics\n')
+tripsWashingtonDF.select(min('StartDate'),max('StartDate')).show()
+tripsWashingtonDF.select(min('EndDate'),max('EndDate')).show()		
 journeysLondonDF.select(countDistinct("BikeId")).show()
 journeysLondonDF.select(countDistinct("EndStationId")).show()
 journeysLondonDF.select(countDistinct("EndStationName")).show()
